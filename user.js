@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Soundcloud Anti Repost
-// @version      1.2.2
+// @version      1.2.3
 // @author       Redcrafter
 // @description  Remove reposts from soundcloud
 // @license      MIT
@@ -14,6 +14,9 @@ function removeReposts() {
         if (item.querySelector(".soundContext__repost")) {
             item.remove();
         }
+    }
+    if(document.querySelectorAll(".soundList__item").length < 100) {
+        window.scrollTo(0, document.body.scrollHeight);
     }
 }
 
@@ -36,7 +39,7 @@ function module(e, t, _require) {
 function init(playManager) {
     // Inject a function to check for reposts
     let oldSet = playManager.setCurrentItem;
-    playManager.setCurrentItem = (e) => {
+    playManager.setCurrentItem = (e, t) => {
         let r = false;
         try {
             // Not sure if this safe
@@ -49,7 +52,7 @@ function init(playManager) {
             playManager.removeItem(e);
             playManager.playNext();
         } else {
-            oldSet(e);
+            oldSet(e, t);
         }
     };
 
